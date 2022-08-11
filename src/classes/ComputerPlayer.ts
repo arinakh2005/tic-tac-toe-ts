@@ -1,7 +1,7 @@
-import { Player } from "./Player";
-import { gameMark } from "../constants/constants";
-import { Cell } from "./Cell";
-import { Game } from "./Game";
+import { Player } from "./Player.js";
+import { gameMark } from "../constants/constants.js";
+import { Cell } from "./Cell.js";
+import { Game } from "./Game.js";
 
 export class ComputerPlayer extends Player {
     constructor() {

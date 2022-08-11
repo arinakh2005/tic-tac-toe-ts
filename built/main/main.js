@@ -1,21 +1,22 @@
 'use strict';
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.restartGame = exports.doStep = exports.createNewGame = void 0;
-const Game_1 = require("../classes/Game");
-function createNewGame() {
+import { Game } from "../classes/Game.js";
+let game;
+export function createNewGame() {
     let haveUnfinishedGame = JSON.parse(window.localStorage.getItem('haveUnfinishedGame'));
-    game = new Game_1.Game();
+    game = new Game();
     game.createNewGame(haveUnfinishedGame);
 }
-exports.createNewGame = createNewGame;
-function doStep(id) {
+export function doStep(id) {
     game.doStep(id);
 }
-exports.doStep = doStep;
-function restartGame() {
+export function restartGame() {
     if (game) {
         game.getGameMap().clearGameMap();
     }
     createNewGame();
 }
-exports.restartGame = restartGame;
+document.getElementById("btn-start").addEventListener("click", createNewGame);
+document.getElementById("btn-clear").addEventListener("click", restartGame);
+document.getElementById("game-area").addEventListener("change", restartGame);
+document.getElementById("number-of-cells-for-win").addEventListener("change", restartGame);
+document.getElementById("game-mode").addEventListener("change", restartGame);

@@ -2,10 +2,12 @@
   "compilerOptions": {
     "outDir": "./built",
     "allowJs": true,
-    "module": "commonjs",
-    "esModuleInterop": true,
-    "moduleResolution": "node",
-    "target": "es6"
+    "target": "ES2017"
   },
-  "include": ["./src/**/*"]
+  "include": ["./src/**/*"],
+  "exclude": [
+    "typings/browser.d.ts",
+    "typings/browser",
+    "node_modules"
+  ]
 }

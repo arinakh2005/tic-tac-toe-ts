@@ -1,30 +1,30 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.GameMap = void 0;
-const Cell_1 = require("./Cell");
-const constants_1 = require("../constants/constants");
-class GameMap {
+import { Cell } from "./Cell.js";
+import { gameMark, maxMapSize, minMapSize, minNumberOfCellsForWin } from "../constants/constants.js";
+import { doStep } from "../main/main.js";
+export class GameMap {
     constructor(size, numberOfCellsToWin) {
         this.nobodyWonFlag = -1;
+        this.occupiedCells = [];
+        this.allCells = [];
         let gameAreaElemHtml = document.getElementById('game-area');
-        if (size < constants_1.minMapSize) {
-            this.size = constants_1.minMapSize;
-            gameAreaElemHtml.value = String(constants_1.minMapSize);
-            alert(`Мінімальний розмір поля ${constants_1.minMapSize}х${constants_1.minMapSize}!`);
+        if (size < minMapSize) {
+            this.size = minMapSize;
+            gameAreaElemHtml.value = String(minMapSize);
+            alert(`Мінімальний розмір поля ${minMapSize}х${minMapSize}!`);
         }
-        else if (size > constants_1.maxMapSize) {
-            this.size = constants_1.maxMapSize;
-            gameAreaElemHtml.value = String(constants_1.maxMapSize);
-            alert(`Максимальний розмір поля ${constants_1.maxMapSize}х${constants_1.maxMapSize}!`);
+        else if (size > maxMapSize) {
+            this.size = maxMapSize;
+            gameAreaElemHtml.value = String(maxMapSize);
+            alert(`Максимальний розмір поля ${maxMapSize}х${maxMapSize}!`);
         }
         else {
             this.size = size;
         }
         let numberOfCellsToWinElemHtml = document.getElementById('number-of-cells-for-win');
-        if (numberOfCellsToWin < constants_1.minNumberOfCellsForWin) {
-            this.numberOfCellsToWin = constants_1.minNumberOfCellsForWin;
-            numberOfCellsToWinElemHtml.value = String(constants_1.minNumberOfCellsForWin);
-            alert(`Мінімальна к-сть клітинок для виграшу ${constants_1.minNumberOfCellsForWin}!`);
+        if (numberOfCellsToWin < minNumberOfCellsForWin) {
+            this.numberOfCellsToWin = minNumberOfCellsForWin;
+            numberOfCellsToWinElemHtml.value = String(minNumberOfCellsForWin);
+            alert(`Мінімальна к-сть клітинок для виграшу ${minNumberOfCellsForWin}!`);
         }
         else if (numberOfCellsToWin > this.size) {
             this.numberOfCellsToWin = this.size;
@@ -48,21 +48,21 @@ class GameMap {
                 td.classList.add("cell");
                 let id = `cell${((i * this.size) + j)}`;
                 td.setAttribute('id', `${id}`);
-                this.currentCell = new Cell_1.Cell(id);
+                this.currentCell = new Cell(id);
                 if (localStorageFlag === 1) {
-                    if (this.allCells[((i * this.size) + j)].occupiedBy === constants_1.gameMark.cross) {
+                    if (this.allCells[((i * this.size) + j)].occupiedBy === gameMark.cross) {
                         this.currentCell.setCellOccupied();
-                        this.currentCell.setCellOccupiedByElement(constants_1.gameMark.cross);
-                        td.innerHTML = `<img src="./images/${constants_1.gameMark.cross}.png" alt="${constants_1.gameMark.cross}">`;
+                        this.currentCell.setCellOccupiedByElement(gameMark.cross);
+                        td.innerHTML = `<img src="images/${gameMark.cross}.png" alt="${gameMark.cross}">`;
                     }
-                    if (this.allCells[((i * this.size) + j)].occupiedBy === constants_1.gameMark.circle) {
+                    if (this.allCells[((i * this.size) + j)].occupiedBy === gameMark.circle) {
                         this.currentCell.setCellOccupied();
-                        this.currentCell.setCellOccupiedByElement(constants_1.gameMark.circle);
-                        td.innerHTML = `<img src="./images/${constants_1.gameMark.circle}.png" alt="${constants_1.gameMark.circle}">`;
+                        this.currentCell.setCellOccupiedByElement(gameMark.circle);
+                        td.innerHTML = `<img src="images/${gameMark.circle}.png" alt="${gameMark.circle}">`;
                     }
                     tempAllCells.push(this.currentCell);
                 }
-                td.setAttribute('onclick', `doStep("${id}")`);
+                td.addEventListener("click", () => { doStep(id); });
                 if (localStorageFlag === 0) {
                     this.allCells.push(this.currentCell);
                 }
@@ -119,13 +119,13 @@ class GameMap {
         let counter = 0;
         this.allCells.forEach(function (item) { if (item.isOccupied === true)
             counter++; });
-        return (counter === Math.pow(this.size, 2));
+        return (counter === this.size ** 2);
     }
     getCurrentCell() {
         return this.currentCell;
     }
     setCurrentCell(cellId) {
-        this.currentCell = new Cell_1.Cell(cellId);
+        this.currentCell = new Cell(cellId);
     }
     getAllCells() {
         return this.allCells;
@@ -149,10 +149,10 @@ class GameMap {
         return this.nobodyWonFlag;
     }
     checkWinCombinations(arrOfIndexes) {
-        if (arrOfIndexes.every(item => item.occupiedBy === constants_1.gameMark.circle)) {
+        if (arrOfIndexes.every(item => item.occupiedBy === gameMark.circle)) {
             return true;
         }
-        else if (arrOfIndexes.every(item => item.occupiedBy === constants_1.gameMark.cross)) {
+        else if (arrOfIndexes.every(item => item.occupiedBy === gameMark.cross)) {
             return true;
         }
     }
@@ -177,7 +177,7 @@ class GameMap {
         let step = this.size - this.numberOfCellsToWin;
         let arrOfIndexes = [];
         for (let i = 0; i < (this.size * (step + 1)); i++) {
-            for (let j = i; j < Math.pow(this.size, 2); j += this.size) {
+            for (let j = i; j < this.size ** 2; j += this.size) {
                 if (arrOfIndexes.length < this.numberOfCellsToWin) {
                     arrOfIndexes.push(this.allCells[j]);
                 }
@@ -192,8 +192,8 @@ class GameMap {
     wonInMainDiagonal() {
         let arrOfIndexes = [];
         let allowableIndexes = this.fillArrOfAllowableIndexesInMainDiagonal();
-        for (let i = 0; i < Math.pow(this.size, 2); i++) {
-            for (let j = allowableIndexes[i]; j < Math.pow(this.size, 2); j += (this.size + 1)) {
+        for (let i = 0; i < this.size ** 2; i++) {
+            for (let j = allowableIndexes[i]; j < this.size ** 2; j += (this.size + 1)) {
                 if (arrOfIndexes.length < this.numberOfCellsToWin) {
                     arrOfIndexes.push(this.allCells[j]);
                 }
@@ -215,7 +215,7 @@ class GameMap {
         }
         step = this.size - this.numberOfCellsToWin;
         arrOfAllowableIndexes.push(i);
-        for (i = this.size; i < Math.pow(this.size, 2); i++) {
+        for (i = this.size; i < this.size ** 2; i++) {
             if (step === 0) {
                 return arrOfAllowableIndexes;
             }
@@ -226,7 +226,7 @@ class GameMap {
                     step--;
                 }
                 step = this.size - this.numberOfCellsToWin;
-                if (arrOfAllowableIndexes.length >= Math.pow((step + 1), 2)) {
+                if (arrOfAllowableIndexes.length >= (step + 1) ** 2) {
                     return arrOfAllowableIndexes;
                 }
             }
@@ -238,8 +238,8 @@ class GameMap {
             .sort(function (a, b) {
             return a - b;
         });
-        for (let i = 0; i < Math.pow(this.size, 2); i++) {
-            for (let j = allowableIndexes[i]; j < Math.pow(this.size, 2); j += (this.size - 1)) {
+        for (let i = 0; i < this.size ** 2; i++) {
+            for (let j = allowableIndexes[i]; j < this.size ** 2; j += (this.size - 1)) {
                 if (arrOfIndexes.length < this.numberOfCellsToWin) {
                     arrOfIndexes.push(this.allCells[j]);
                 }
@@ -255,7 +255,7 @@ class GameMap {
         let arrOfAllowableIndexes = [];
         let step = this.size - this.numberOfCellsToWin;
         let indexForRemember;
-        for (let i = this.size; i < Math.pow(this.size, 2); i++) {
+        for (let i = this.size; i < this.size ** 2; i++) {
             if (step === 0) {
                 arrOfAllowableIndexes.push(this.size - 1);
                 return arrOfAllowableIndexes;
@@ -270,11 +270,10 @@ class GameMap {
                 }
                 step = this.size - this.numberOfCellsToWin;
                 i = indexForRemember + this.size;
-                if (arrOfAllowableIndexes.length >= Math.pow((step + 1), 2)) {
+                if (arrOfAllowableIndexes.length >= (step + 1) ** 2) {
                     return arrOfAllowableIndexes;
                 }
             }
         }
     }
 }
-exports.GameMap = GameMap;

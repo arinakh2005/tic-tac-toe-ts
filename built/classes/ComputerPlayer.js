@@ -1,9 +1,6 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.ComputerPlayer = void 0;
-const Player_1 = require("./Player");
-const constants_1 = require("../constants/constants");
-class ComputerPlayer extends Player_1.Player {
+import { Player } from "./Player.js";
+import { gameMark } from "../constants/constants.js";
+export class ComputerPlayer extends Player {
     constructor() {
         super(0);
     }
@@ -14,9 +11,9 @@ class ComputerPlayer extends Player_1.Player {
         }
         else {
             let idHTML = `cell${id}`;
-            document.getElementById(idHTML).innerHTML = `<img src="./images/${constants_1.gameMark.circle}.png" alt="${constants_1.gameMark.circle}">`;
+            document.getElementById(idHTML).innerHTML = `<img src="./images/${gameMark.circle}.png" alt="${gameMark.circle}">`;
             allCells[id].setCellOccupied();
-            allCells[id].setCellOccupiedByElement(constants_1.gameMark.circle);
+            allCells[id].setCellOccupiedByElement(gameMark.circle);
             game.isGameOver();
         }
     }
@@ -24,4 +21,3 @@ class ComputerPlayer extends Player_1.Player {
         return (Math.floor(Math.random() * size));
     }
 }
-exports.ComputerPlayer = ComputerPlayer;

@@ -1,8 +1,8 @@
-import { GameMap } from "./GameMap";
-import {gameMark, gameMode, playerType} from "../constants/constants";
-import {Player} from "./Player";
-import {ComputerPlayer} from "./ComputerPlayer";
-import {restartGame} from "../main/main";
+import { GameMap } from "./GameMap.js";
+import {gameMark, gameMode, playerType} from "../constants/constants.js";
+import {Player} from "./Player.js";
+import {ComputerPlayer} from "./ComputerPlayer.js";
+import {restartGame} from "../main/main.js";
 
 export class Game {
     private mode: number;
@@ -116,17 +116,17 @@ export class Game {
 
     doStepInModePlayerWithPlayer(id: string) {
         let cell = document.getElementById(id);
-        this.getGameMap().getOccupiedCells().push(id);
+        this.gameMap.getOccupiedCells().push(id);
         let i = +(id.slice(4, 6));
         this.getGameMap().getAllCells()[i].setCellOccupied();
 
         if (this.playerWhoMadeLastStep.getPlayerType() === this.firstPlayer.getPlayerType()) {
-            cell.innerHTML = `<img src="./images/${gameMark.circle}.png" alt="${gameMark.circle}">`;
+            cell.innerHTML = `<img src="images/${gameMark.circle}.png" alt="${gameMark.circle}">`;
             this.getGameMap().getAllCells()[i].setCellOccupiedByElement(gameMark.circle);
             this.playerWhoMadeLastStep = this.secondPlayer;
         } else {
             this.lastRole = gameMark.cross;
-            cell.innerHTML = `<img src="./images/${gameMark.cross}.png" alt="${gameMark.cross}">`;
+            cell.innerHTML = `<img src="images/${gameMark.cross}.png" alt="${gameMark.cross}">`;
             this.getGameMap().getAllCells()[i].setCellOccupiedByElement(gameMark.cross);
             this.playerWhoMadeLastStep = this.firstPlayer;
         }
@@ -135,7 +135,7 @@ export class Game {
     doStepInModePlayerWithComputer(id: string) {
         if (this.playerWhoMadeLastStep.getPlayerType() === this.secondPlayer.getPlayerType()) {
             let elem = <HTMLInputElement>document.getElementById(id);
-            elem.innerHTML = `<img src="./images/${gameMark.cross}.png" alt="${gameMark.cross}">`;
+            elem.innerHTML = `<img src="images/${gameMark.cross}.png" alt="${gameMark.cross}">`;
             let i = +(id.slice(4, 6));
             this.gameMap.getAllCells()[i].setCellOccupied();
             this.gameMap.getAllCells()[i].setCellOccupiedByElement(gameMark.cross);

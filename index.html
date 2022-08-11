@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="uk">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="images/favicon.png" type="image/png">
+    <link rel="stylesheet" href="styles/style.css">
+    <title>Tic-tac-toe</title>
+</head>
+
+<body>
+    <h1>Будь ласка, оберіть режим гри</h1>
+    <div class="select-game-mode">
+        <select id="game-mode" >
+            <option value="0">гравець / гравець</option>
+            <option value="1">гравець / комп'ютер</option>
+        </select>
+    </div>
+    <h1>Оберіть розмір поля</h1>
+    <div class="select-game-area">
+        <input class="map-size" id="game-area" type="number" value="3" min="3" max="100">
+    </div>
+
+    <h1>К-сть клітинок для виграшу</h1>
+    <div class="select-number-of-cells-for-win">
+        <input class="map-size" id="number-of-cells-for-win"  type="number" value="3" min="2" max="100">
+    </div>
+
+    <div class="btn">
+        <button class="btn__start" id="btn-start">Розпочати гру</button>
+        <button class="btn__clear" id="btn-clear" disabled>Очистити поле</button>
+    </div>
+    <div class="game-area" id="table-game">
+        <table class="game-area__table"></table>
+        <p class="game-area__player-number" id="player-number">Хід: ...</p>
+    </div>
+</body>
+<script type="module" src="./built/main/main.js"></script>
+</html>

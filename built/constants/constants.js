@@ -1,18 +1,15 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.playerType = exports.gameMode = exports.gameMark = exports.minNumberOfCellsForWin = exports.maxMapSize = exports.minMapSize = void 0;
-exports.minMapSize = 3;
-exports.maxMapSize = 100;
-exports.minNumberOfCellsForWin = 2;
-exports.gameMark = {
+export const minMapSize = 3;
+export const maxMapSize = 100;
+export const minNumberOfCellsForWin = 2;
+export const gameMark = {
     cross: 'cross',
     circle: 'circle'
 };
-exports.gameMode = {
+export const gameMode = {
     playerWithPlayer: 0,
     playerWithComputer: 1
 };
-exports.playerType = {
+export const playerType = {
     computer: 0,
     player: 3,
     player1: 1,

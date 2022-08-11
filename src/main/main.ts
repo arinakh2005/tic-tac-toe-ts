@@ -1,8 +1,8 @@
 'use strict'
 
-import {Game} from "../classes/Game";
+import {Game} from "../classes/Game.js";
 
-declare var game: Game;
+let game: Game;
 
 export function createNewGame() {
     let haveUnfinishedGame = JSON.parse(window.localStorage.getItem('haveUnfinishedGame'));
@@ -20,5 +20,13 @@ export function restartGame() {
     }
     createNewGame();
 }
+
+
+document.getElementById("btn-start").addEventListener("click", createNewGame);
+document.getElementById("btn-clear").addEventListener("click", restartGame);
+document.getElementById("game-area").addEventListener("change", restartGame);
+
+document.getElementById("number-of-cells-for-win").addEventListener("change", restartGame);
+document.getElementById("game-mode").addEventListener("change", restartGame);
 
 

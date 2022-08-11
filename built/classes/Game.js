@@ -1,17 +1,14 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.Game = void 0;
-const GameMap_1 = require("./GameMap");
-const constants_1 = require("../constants/constants");
-const Player_1 = require("./Player");
-const ComputerPlayer_1 = require("./ComputerPlayer");
-const main_1 = require("../main/main");
-class Game {
+import { GameMap } from "./GameMap.js";
+import { gameMark, gameMode, playerType } from "../constants/constants.js";
+import { Player } from "./Player.js";
+import { ComputerPlayer } from "./ComputerPlayer.js";
+import { restartGame } from "../main/main.js";
+export class Game {
     constructor() {
-        this.lastRole = constants_1.gameMark.circle;
+        this.lastRole = gameMark.circle;
     }
     setGameMap(valueSize, valueNumberOfCellsForWin) {
-        this.gameMap = new GameMap_1.GameMap(valueSize, valueNumberOfCellsForWin);
+        this.gameMap = new GameMap(valueSize, valueNumberOfCellsForWin);
     }
     getGameMap() {
         return this.gameMap;
@@ -23,24 +20,24 @@ class Game {
         return this.mode;
     }
     setFirstPlayer(value) {
-        this.firstPlayer = new Player_1.Player(value);
+        this.firstPlayer = new Player(value);
     }
     getFirstPlayer() {
         return this.firstPlayer;
     }
     setSecondPlayer(value) {
         if (value === 0) {
-            this.secondPlayer = new ComputerPlayer_1.ComputerPlayer();
+            this.secondPlayer = new ComputerPlayer();
         }
         else {
-            this.secondPlayer = new Player_1.Player(value);
+            this.secondPlayer = new Player(value);
         }
     }
     getSecondPlayer() {
         return this.secondPlayer;
     }
     setPlayerWhoMadeLastStep(value) {
-        this.playerWhoMadeLastStep = new Player_1.Player(value);
+        this.playerWhoMadeLastStep = new Player(value);
     }
     getPlayerWhoMadeLastStep() {
         return this.playerWhoMadeLastStep;
@@ -65,15 +62,15 @@ class Game {
             select = document.getElementById("game-mode");
             this.setMode(+(select.value));
             this.getGameMap().buildGameMap(0);
-            if (this.getMode() === constants_1.gameMode.playerWithPlayer) {
-                this.setFirstPlayer(constants_1.playerType.player1);
-                this.setSecondPlayer(constants_1.playerType.player2);
-                this.setPlayerWhoMadeLastStep(constants_1.playerType.player2);
+            if (this.getMode() === gameMode.playerWithPlayer) {
+                this.setFirstPlayer(playerType.player1);
+                this.setSecondPlayer(playerType.player2);
+                this.setPlayerWhoMadeLastStep(playerType.player2);
             }
-            else if (this.getMode() === constants_1.gameMode.playerWithComputer) {
-                this.setFirstPlayer(constants_1.playerType.player);
-                this.setSecondPlayer(constants_1.playerType.computer);
-                this.setPlayerWhoMadeLastStep(constants_1.playerType.computer);
+            else if (this.getMode() === gameMode.playerWithComputer) {
+                this.setFirstPlayer(playerType.player);
+                this.setSecondPlayer(playerType.computer);
+                this.setPlayerWhoMadeLastStep(playerType.computer);
             }
         }
         let buttonStart = document.getElementById('btn-start');
@@ -85,45 +82,45 @@ class Game {
         if (this.gameMap.isCellAvailableForStep(id)) {
             return;
         }
-        if (this.mode === constants_1.gameMode.playerWithPlayer) {
+        if (this.mode === gameMode.playerWithPlayer) {
             let playerNumberLabel = document.getElementById('player-number');
             playerNumberLabel.innerText = `Хід: гравець ${this.playerWhoMadeLastStep.getPlayerType()}`;
             this.doStepInModePlayerWithPlayer(id);
             this.isGameOver();
         }
-        else if (this.mode === constants_1.gameMode.playerWithComputer) {
+        else if (this.mode === gameMode.playerWithComputer) {
             this.doStepInModePlayerWithComputer(id);
         }
         this.putOnLocalStorage(this);
     }
     doStepInModePlayerWithPlayer(id) {
         let cell = document.getElementById(id);
-        this.getGameMap().getOccupiedCells().push(id);
+        this.gameMap.getOccupiedCells().push(id);
         let i = +(id.slice(4, 6));
         this.getGameMap().getAllCells()[i].setCellOccupied();
         if (this.playerWhoMadeLastStep.getPlayerType() === this.firstPlayer.getPlayerType()) {
-            cell.innerHTML = `<img src="./images/${constants_1.gameMark.circle}.png" alt="${constants_1.gameMark.circle}">`;
-            this.getGameMap().getAllCells()[i].setCellOccupiedByElement(constants_1.gameMark.circle);
+            cell.innerHTML = `<img src="images/${gameMark.circle}.png" alt="${gameMark.circle}">`;
+            this.getGameMap().getAllCells()[i].setCellOccupiedByElement(gameMark.circle);
             this.playerWhoMadeLastStep = this.secondPlayer;
         }
         else {
-            this.lastRole = constants_1.gameMark.cross;
-            cell.innerHTML = `<img src="./images/${constants_1.gameMark.cross}.png" alt="${constants_1.gameMark.cross}">`;
-            this.getGameMap().getAllCells()[i].setCellOccupiedByElement(constants_1.gameMark.cross);
+            this.lastRole = gameMark.cross;
+            cell.innerHTML = `<img src="images/${gameMark.cross}.png" alt="${gameMark.cross}">`;
+            this.getGameMap().getAllCells()[i].setCellOccupiedByElement(gameMark.cross);
             this.playerWhoMadeLastStep = this.firstPlayer;
         }
     }
     doStepInModePlayerWithComputer(id) {
         if (this.playerWhoMadeLastStep.getPlayerType() === this.secondPlayer.getPlayerType()) {
             let elem = document.getElementById(id);
-            elem.innerHTML = `<img src="./images/${constants_1.gameMark.cross}.png" alt="${constants_1.gameMark.cross}">`;
+            elem.innerHTML = `<img src="images/${gameMark.cross}.png" alt="${gameMark.cross}">`;
             let i = +(id.slice(4, 6));
             this.gameMap.getAllCells()[i].setCellOccupied();
-            this.gameMap.getAllCells()[i].setCellOccupiedByElement(constants_1.gameMark.cross);
+            this.gameMap.getAllCells()[i].setCellOccupiedByElement(gameMark.cross);
             this.playerWhoMadeLastStep = this.firstPlayer;
         }
         if (!this.isGameOver()) {
-            if (this.secondPlayer instanceof ComputerPlayer_1.ComputerPlayer) {
+            if (this.secondPlayer instanceof ComputerPlayer) {
                 this.playerWhoMadeLastStep = this.secondPlayer;
                 this.secondPlayer.doComputerStep(this.gameMap.getAllCells(), this);
             }
@@ -133,7 +130,7 @@ class Game {
         let isGameOver = false;
         if (this.getGameMap().isPlayerWon() === this.getGameMap().getNobodyWonFlag()) {
             setTimeout(this.getDrawMessage, 200);
-            setTimeout(main_1.restartGame, 500);
+            setTimeout(restartGame, 500);
             isGameOver = true;
         }
         else if (this.getGameMap().isPlayerWon()) {
@@ -141,14 +138,14 @@ class Game {
             setTimeout(function () {
                 temp.getWinnerMessage();
             }, 200);
-            setTimeout(main_1.restartGame, 500);
+            setTimeout(restartGame, 500);
             isGameOver = true;
         }
         return isGameOver;
     }
     getWinnerMessage() {
-        if (this.getMode() === constants_1.gameMode.playerWithComputer) {
-            if (this.getPlayerWhoMadeLastStep().getPlayerType() === constants_1.playerType.computer) {
+        if (this.getMode() === gameMode.playerWithComputer) {
+            if (this.getPlayerWhoMadeLastStep().getPlayerType() === playerType.computer) {
                 alert("Переміг комп'ютер!");
             }
             else {
@@ -210,7 +207,7 @@ class Game {
         selectNumberOfCellsForWinElemHTML.value = numberOfCellsForWin;
         let labelWhoMakeNextStep = document.getElementById('player-number');
         let nextPlayer;
-        if (this.getMode() === constants_1.gameMode.playerWithPlayer) {
+        if (this.getMode() === gameMode.playerWithPlayer) {
             if (this.getPlayerWhoMadeLastStep().getPlayerType() === this.getFirstPlayer().getPlayerType()) {
                 nextPlayer = this.getSecondPlayer().getPlayerType();
             }
@@ -224,4 +221,3 @@ class Game {
         }
     }
 }
-exports.Game = Game;

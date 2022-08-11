@@ -1,5 +1,6 @@
-import {Cell} from "./Cell";
-import {gameMark, maxMapSize, minMapSize, minNumberOfCellsForWin} from "../constants/constants";
+import {Cell} from "./Cell.js";
+import {gameMark, maxMapSize, minMapSize, minNumberOfCellsForWin} from "../constants/constants.js";
+import { doStep } from "../main/main.js";
 
 export class GameMap {
 
@@ -11,6 +12,8 @@ export class GameMap {
     private nobodyWonFlag: number = -1;
 
     constructor(size: number, numberOfCellsToWin: number) {
+        this.occupiedCells = [];
+        this.allCells = [];
         let gameAreaElemHtml = <HTMLInputElement>document.getElementById('game-area');
 
         if (size < minMapSize) {
@@ -55,24 +58,25 @@ export class GameMap {
                 td.classList.add("cell");
                 let id = `cell${((i * this.size) + j)}`;
                 td.setAttribute('id', `${id}`);
+                
                 this.currentCell = new Cell(id);
 
                 if (localStorageFlag === 1) {
                     if (this.allCells[((i * this.size) + j)].occupiedBy === gameMark.cross) {
                         this.currentCell.setCellOccupied();
                         this.currentCell.setCellOccupiedByElement(gameMark.cross);
-                        td.innerHTML = `<img src="./images/${gameMark.cross}.png" alt="${gameMark.cross}">`;
+                        td.innerHTML = `<img src="images/${gameMark.cross}.png" alt="${gameMark.cross}">`;
                     }
 
                     if (this.allCells[((i * this.size) + j)].occupiedBy === gameMark.circle) {
                         this.currentCell.setCellOccupied();
                         this.currentCell.setCellOccupiedByElement(gameMark.circle);
-                        td.innerHTML = `<img src="./images/${gameMark.circle}.png" alt="${gameMark.circle}">`;
+                        td.innerHTML = `<img src="images/${gameMark.circle}.png" alt="${gameMark.circle}">`;
                     }
                     tempAllCells.push(this.currentCell);
                 }
 
-                td.setAttribute('onclick', `doStep("${id}")`);
+                td.addEventListener("click", () => { doStep(id) })
 
                 if (localStorageFlag === 0) {
                     this.allCells.push(this.currentCell);

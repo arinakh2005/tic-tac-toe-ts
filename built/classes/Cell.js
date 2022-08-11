@@ -1,7 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.Cell = void 0;
-class Cell {
+export class Cell {
     constructor(id) {
         this.isOccupied = false;
         this.occupiedBy = 'unknown';
@@ -17,4 +14,3 @@ class Cell {
         return this.isOccupied;
     }
 }
-exports.Cell = Cell;
